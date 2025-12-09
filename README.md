@@ -2,14 +2,23 @@
 
 A minimalist, modern portfolio site for showcasing projects and experience.
 
-## Tech
-- HTML, CSS, JavaScript
-- Vanta.js background (NET)
-- Responsive, reduced-motion friendly
+## Features
+- Clean, responsive layout with semantic HTML
+- Vanta.js NET background with reduced-motion fallback
+- Light translucent overlays for readability
 
-## Local dev
+## Tech Stack
+- HTML, CSS, JavaScript
+- Vanta.js (NET)
+
+## Run locally
+```bash
 python3 -m http.server 8000
-# then visit http://localhost:8000
+# visit http://localhost:8000
+```
 
 ## Deployment
 Static site; host on GitHub Pages, Netlify, Vercel, or any static host.
+
+## License
+MIT
