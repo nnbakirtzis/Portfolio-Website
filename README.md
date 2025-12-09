@@ -4,8 +4,7 @@ A minimalist, modern portfolio site for showcasing projects and experience.
 
 ## Features
 - Clean, responsive layout with semantic HTML
-- Vanta.js NET background with reduced-motion fallback
-- Light translucent overlays for readability
+- Vanta.js NET 3D background
 
 ## Tech Stack
 - HTML, CSS, JavaScript
