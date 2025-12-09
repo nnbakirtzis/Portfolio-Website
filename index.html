@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Portfolio | Nikolaos Bakirtzis</title>
+    <meta
+      name="description"
+      content="Showcase your software engineering work, resume, and cybersecurity ambitions with this modern portfolio template."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div id="vanta-bg" aria-hidden="true"></div>
+    <div class="noise-overlay" aria-hidden="true"></div>
+    <div class="code-overlay" aria-hidden="true">
+      <div class="code-overlay__glow"></div>
+      <pre class="code-overlay__display" id="code-overlay"></pre>
+    </div>
+    <header class="nav-shell" id="top">
+      <nav class="nav">
+        <a class="nav__brand" href="#top">
+          <img
+            class="nav__brand-avatar"
+            src="assets/profile.jpg"
+            alt="Portrait of Nikolaos Bakirtzis"
+            loading="lazy"
+          />
+          <span class="nav__brand-name">Nikolaos Bakirtzis</span>
+        </a>
+        <!-- Swap the path above if you store your headshot elsewhere. -->
+        <button class="nav__toggle" aria-label="Toggle navigation">
+          <span></span>
+          <span></span>
+        </button>
+        <ul class="nav__links">
+          <li><a href="#about">About</a></li>
+          <li><a href="#skills">Skills</a></li>
+          <li><a href="#experience">Experience</a></li>
+          <li><a href="#projects">Projects</a></li>
+          <li><a href="#contact">Contact</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <main>
+      <section class="hero" aria-labelledby="hero-title" data-scroll-reveal>
+        <div class="hero__intro">
+          <p class="hero__eyebrow">Software Developer &amp; Aspiring Cybersecurity Analyst</p>
+          <h1 class="hero__title" id="hero-title">Building and maintaining resilient digital experiences</h1>
+          <p class="hero__description">
+            I build secure, human-centered software with a focus on performance, security, and user experience.
+          </p>
+          <div class="hero__actions">
+            <a class="button button--primary" href="#projects">View Portfolio</a>
+            <a class="button button--ghost" href="#resume">Download Resume</a>
+            <!-- Replace the resume link with your actual file or external URL. -->
+          </div>
+        </div>
+        <aside class="hero__panel">
+          <div class="hero__card" data-scroll-reveal data-scroll-delay="120">
+            <p class="hero__card-label">Currently</p>
+            <p class="hero__card-title">Software Developer</p>
+            <!-- Swap in your current role, internship, or a key focus area. -->
+            <p class="hero__card-meta">Exploring threat intelligence &amp; adversary simulation.</p>
+          </div>
+          <div class="hero__card hero__card--secondary" data-scroll-reveal data-scroll-delay="220">
+            <p class="hero__card-label">Toolset</p>
+            <ul>
+              <li>Python · Julia · C++ · SQL · MongoDB · InfluxDB </li>
+              <li>Linux OS · Grafana </li>
+              <li>Kali Linux Toolkit </li>
+              <!-- Tailor skill clusters to match your stack. -->
+            </ul>
+          </div>
+        </aside>
+      </section>
+
+      <section class="section" id="about" aria-labelledby="about-heading" data-scroll-reveal>
+        <div class="section__header">
+          <h2 id="about-heading">Who I am</h2>
+          <p>Engineer by trade. Defender by ambition.</p>
+        </div>
+        <div class="about">
+          <article class="about__story">
+            <p>
+              I'm a software developer with a strong eye for detail, designing systems that feel effortless and remain
+              battle-tested against modern threat landscapes.
+              <!-- Share a concise, authentic narrative about your background. -->
+            </p>
+            <p>
+              My focus areas include secure application design, automated testing, and translating complex risks into
+              intuitive user experiences.
+              <!-- Add a second paragraph that highlights what sets you apart. -->
+            </p>
+          </article>
+          <aside class="about__meta">
+            <div>
+              <span class="about__meta-label">Based in</span>
+              <span class="about__meta-value">Austin, TX</span>
+              <!-- Update with your location or "Remote". -->
+            </div>
+            <div>
+              <span class="about__meta-label">Open to</span>
+              <span class="about__meta-value">Cybersecurity-focused roles</span>
+              <!-- Update the types of roles or collaborations you're seeking. -->
+            </div>
+            <div>
+              <span class="about__meta-label">Approach</span>
+              <span class="about__meta-value">Privacy-first, research-driven, product-minded</span>
+              <!-- Distill your working style into a short phrase. -->
+            </div>
+          </aside>
+        </div>
+      </section>
+
+      <section class="section section--accent" id="skills" aria-labelledby="skills-heading" data-scroll-reveal>
+        <div class="section__header">
+          <h2 id="skills-heading">Skills</h2>
+          <p>Blend of engineering rigor and security intuition.</p>
+        </div>
+        <div class="skills-grid">
+          <article class="skills-card" data-scroll-reveal data-scroll-delay="80">
+            <h3 class="skills-card__title">Core Engineering</h3>
+            <ul>
+              <li>Full-stack product development</li>
+              <li>API design &amp; integration</li>
+              <li>Systems architecture</li>
+              <!-- Pin your main engineering skills here. -->
+            </ul>
+          </article>
+          <article class="skills-card" data-scroll-reveal data-scroll-delay="160">
+            <h3 class="skills-card__title">Security Focus</h3>
+            <ul>
+              <li>Threat modeling workshops</li>
+              <li>Secure SDLC implementation</li>
+              <li>Incident response playbooks</li>
+              <!-- List the cybersecurity practices you enjoy or want to pursue. -->
+            </ul>
+          </article>
+          <article class="skills-card" data-scroll-reveal data-scroll-delay="240">
+            <h3 class="skills-card__title">Tooling &amp; Platforms</h3>
+            <ul>
+              <li>Cloud: AWS · Azure</li>
+              <li>Containers: Docker · Kubernetes</li>
+              <li>Monitoring: Datadog · Splunk</li>
+              <!-- Mix in any lab environments or red/blue team tools. -->
+            </ul>
+          </article>
+        </div>
+      </section>
+
+      <section class="section" id="experience" aria-labelledby="experience-heading" data-scroll-reveal>
+        <div class="section__header">
+          <h2 id="experience-heading">Experience &amp; Impact</h2>
+          <p>Selected roles, internships, and research that shaped my craft.</p>
+        </div>
+        <div class="timeline" id="resume">
+          <article class="timeline__item" data-scroll-reveal data-scroll-delay="80">
+            <div class="timeline__meta">
+              <span class="timeline__date">2023 — Present</span>
+              <span class="timeline__location">University of Texas at Austin · Bureau of Economic Geology</span>
+              <!-- Replace with actual dates and company. -->
+            </div>
+            <div class="timeline__content">
+              <h3>Software Developer</h3>
+              <p>
+                Lead the design of secure APIs that power customer onboarding for millions of users while reducing
+                account takeover by 40%.
+                <!-- Focus on measurable outcomes. -->
+              </p>
+              <ul>
+                <li>Partnered with security teams to integrate automated scanning into CI/CD.</li>
+                <li>Implemented privacy-first telemetry practices to improve detection without compromising UX.</li>
+                <li>Mentored developers on secure coding and incident readiness.</li>
+              </ul>
+            </div>
+          </article>
+          <article class="timeline__item" data-scroll-reveal data-scroll-delay="160">
+            <div class="timeline__meta">
+              <span class="timeline__date">2022</span>
+              <span class="timeline__location">University Lab</span>
+            </div>
+            <div class="timeline__content">
+              <h3>Cybersecurity Research Intern</h3>
+              <p>Investigated emerging ransomware tactics, publishing a playbook adopted by regional SOC teams.</p>
+              <ul>
+                <li>Built detection pipelines leveraging machine learning to classify malicious traffic.</li>
+                <li>Developed threat simulations to validate blue team strategies.</li>
+              </ul>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="section" id="projects" aria-labelledby="projects-heading" data-scroll-reveal>
+        <div class="section__header">
+          <h2 id="projects-heading">Projects</h2>
+          <p>A snapshot of what I've built, secured, and shipped.</p>
+        </div>
+        <div class="projects-grid">
+          <article class="project-card" data-scroll-reveal data-scroll-delay="60">
+            <div class="project-card__meta">
+              <span class="project-card__tag">Software Development</span>
+              <!-- Use short labels to hint at domain/focus. -->
+            </div>
+            <h3>Fault Slip Potential</h3>
+            <p>
+              Developed the web application version of the tool, initiated by the Stanford Center for Induced and Triggered Seismicity.
+            </p>
+            <ul>
+              <li>Stack: Julia, Javascript, Elastic</li>
+              <li>Impact: Reduced mean response time by 55%</li>
+            </ul>
+            <div class="project-card__actions">
+              <a href="https://tools.texnet.beg.utexas.edu/" class="button button--inline">Preview</a>
+              <a href="https://github.com/ut-beg-texnet/FSP" class="button button--inline">GitHub</a>
+              <!-- Swap placeholders with live links or remove if NDAs apply. -->
+            </div>
+          </article>
+          <article class="project-card" data-scroll-reveal data-scroll-delay="140">
+            <div class="project-card__meta">
+              <span class="project-card__tag">Product Design</span>
+            </div>
+            <h3>Minimalist Finance Dashboard</h3>
+            <p>
+              Designed and built a frictionless budgeting tool emphasizing accessibility and data privacy.
+            </p>
+            <ul>
+              <li>Stack: Next.js, GraphQL, Tailwind</li>
+              <li>Impact: 20% increase in user retention</li>
+            </ul>
+            <div class="project-card__actions">
+              <a href="#" class="button button--inline">Preview</a>
+            </div>
+          </article>
+          <article class="project-card" data-scroll-reveal data-scroll-delay="220">
+            <div class="project-card__meta">
+              <span class="project-card__tag">Security Research</span>
+            </div>
+            <h3>Shadow Lab</h3>
+            <p>
+              Built a home lab to replicate enterprise threat scenarios and practice purple teaming exercises.
+            </p>
+            <ul>
+              <li>Stack: Terraform, Proxmox, Zeek</li>
+              <li>Impact: Accelerated incident rehearsals across teams</li>
+            </ul>
+            <div class="project-card__actions">
+              <a href="#" class="button button--inline">Lab tour</a>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="section section--accent" id="contact" aria-labelledby="contact-heading" data-scroll-reveal>
+        <div class="section__header">
+          <h2 id="contact-heading">Connect</h2>
+          <p>Let's collaborate on human-centered security.</p>
+        </div>
+        <div class="contact">
+          <div class="contact__card" data-scroll-reveal data-scroll-delay="60">
+            <h3>Say hello</h3>
+            <p>
+              Available for roles, collaborations, and networking.
+              <!-- Adjust the availability statement to your needs. -->
+            </p>
+            <div class="contact__actions">
+              <a class="button button--primary" href="mailto:nnbakirtzis@gmail.com">Email me</a>
+              <a class="button button--ghost" href="https://www.linkedin.com/in/nikolaos-bakirtzis/">LinkedIn</a>
+              <a class="button button--ghost" href="https://github.com/nnbakirtzis">GitHub</a>
+              <!-- Replace social links with actual profiles. -->
+            </div>
+          </div>
+          <aside class="contact__info" data-scroll-reveal data-scroll-delay="160">
+            <p class="contact__eyebrow">Resume</p>
+            <h3>Download the full story</h3>
+            <p>
+              A deep dive into projects, academic work, and the security challenges I've taken on.
+            </p>
+            <a class="button button--inline" href="#resume">View resume</a>
+          </aside>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <p>&copy; <span id="year"></span> Nikolaos Bakirtzis. Crafted with intent.</p>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js" referrerpolicy="no-referrer"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.net.min.js" referrerpolicy="no-referrer"></script>
+    <script src="script.js"></script>
+  </body>
+</html>
