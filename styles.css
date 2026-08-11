@@ -688,6 +688,14 @@ main {
   font-family: 'JetBrains Mono', 'Fira Code', 'SF Mono', monospace;
 }
 
+/* Sit the product subtitle tight under the h3 despite card flex gap */
+.project-card__subtitle {
+  margin: -0.7rem 0 0;
+  font-size: 0.92rem;
+  color: var(--color-text-secondary);
+  letter-spacing: 0.01em;
+}
+
 .project-card__actions {
   display: flex;
   gap: 1rem;

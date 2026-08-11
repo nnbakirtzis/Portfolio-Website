@@ -62,28 +62,22 @@ const sectionObserver = (() => {
 // Code overlay animation
 const codeOverlayDisplay = document.getElementById('code-overlay');
 const codeSnippets = [
-  `const sentinel = createFirewall({
-  threatModel: 'zero-trust',
-  hardening: ['inputValidation', 'rateLimiting'],
-  observability: true
+  `@app.post("/ingest")
+async def ingest_station(payload: StationHealth):
+    await influx.write(payload.to_points())
+    await db.upsert_station(payload.station_id, payload.status)
+    return {"ok": True, "station": payload.station_id}`,
+  `async function retrieveAndAnswer(query) {
+  const docs = await rag.search(query, { topK: 5 });
+  const grounded = docs.map(d => d.citation);
+  return llm.complete({ prompt: query, context: grounded });
+}`,
+  `const handoff = await agent.run({
+  role: "career-planner",
+  context: sharedState,
+  tools: ["jobMatch", "compForecast"]
 });
-await sentinel.deploy();`,
-  `interface ThreatReport {
-  id: string;
-  indicators: Indicator[];
-  mitigations: string[];
-}
-
-const composePlaybook = (report: ThreatReport) =>
-  report.mitigations.map(step => \`- [ ] \${step}\`).join('\n');`,
-  `async function harden(api) {
-  await api.enableTLS();
-  api.enableAuditLogs();
-  api.setRateLimit({ burst: 200, sustained: 80 });
-  return api;
-}
-
-await harden(paymentsService);`
+await persistUserState(handoff.nextState);`
 ];
 
 let codeAnimationTimer;
