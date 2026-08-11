@@ -11,15 +11,12 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="styles.css" />
-    <script src="https://cdn.jsdelivr.net/npm/@studio-freight/lenis@1.0.42/bundled/lenis.min.js"></script>
+    <link rel="stylesheet" href="styles.css?v=20260811" />
   </head>
   <body>
-    <div class="cursor" aria-hidden="true"></div>
-    <div class="cursor-dot" aria-hidden="true"></div>
     <div id="vanta-bg" aria-hidden="true"></div>
     <div class="noise-overlay" aria-hidden="true"></div>
     <div class="code-overlay" aria-hidden="true">
@@ -29,19 +26,26 @@
     <header class="nav-shell" id="top">
       <nav class="nav">
         <a class="nav__brand" href="#top">
-          <img
-            class="nav__brand-avatar"
-            src="assets/profile.jpg"
-            alt="Portrait of Nikolaos Bakirtzis"
-            loading="lazy"
-          />
+          <picture>
+            <source srcset="assets/profile-88.webp" type="image/webp" />
+            <img
+              class="nav__brand-avatar"
+              src="assets/profile-88.jpg"
+              alt="Portrait of Nikolaos Bakirtzis"
+              width="44"
+              height="44"
+              loading="eager"
+              fetchpriority="high"
+              decoding="async"
+            />
+          </picture>
           <span class="nav__brand-name">Nikolaos Bakirtzis</span>
         </a>
-        <button class="nav__toggle" aria-label="Toggle navigation">
+        <button class="nav__toggle" aria-label="Toggle navigation" aria-expanded="false" aria-controls="primary-nav">
           <span></span>
           <span></span>
         </button>
-        <ul class="nav__links">
+        <ul class="nav__links" id="primary-nav">
           <li><a href="#about">About</a></li>
           <li><a href="#skills">Skills</a></li>
           <li><a href="#experience">Experience</a></li>
@@ -246,8 +250,8 @@
               <li>Impact: ~50% performance improvement for web-based workflows</li>
             </ul>
             <div class="project-card__actions">
-              <a href="https://tools.texnet.beg.utexas.edu/" class="button button--inline">Preview</a>
-              <a href="https://github.com/ut-beg-texnet/FSP" class="button button--inline">GitHub</a>
+              <a href="https://tools.texnet.beg.utexas.edu/" class="button button--inline" target="_blank" rel="noopener noreferrer">Preview</a>
+              <a href="https://github.com/ut-beg-texnet/FSP" class="button button--inline" target="_blank" rel="noopener noreferrer">GitHub</a>
             </div>
           </article>
           <article class="project-card" data-scroll-reveal data-scroll-delay="100">
@@ -265,8 +269,8 @@
               <li>Impact: Five-step web workflow consolidating data entry, computation, and visualization on the TexNet Software Portal</li>
             </ul>
             <div class="project-card__actions">
-              <a href="https://gist.texnet.beg.utexas.edu/" class="button button--inline">Preview</a>
-              <a href="https://github.com/ut-beg-texnet/GIST" class="button button--inline">GitHub</a>
+              <a href="https://gist.texnet.beg.utexas.edu/" class="button button--inline" target="_blank" rel="noopener noreferrer">Preview</a>
+              <a href="https://github.com/ut-beg-texnet/GIST" class="button button--inline" target="_blank" rel="noopener noreferrer">GitHub</a>
             </div>
           </article>
           <article class="project-card" data-scroll-reveal data-scroll-delay="140">
@@ -298,7 +302,7 @@
               <li>Impact: Structured agent handoffs, shared context, user-state persistence, and model-driven recommendations</li>
             </ul>
             <div class="project-card__actions">
-              <a href="https://github.com/nnbakirtzis/LuminaAI" class="button button--inline">GitHub</a>
+              <a href="https://github.com/nnbakirtzis/LuminaAI" class="button button--inline" target="_blank" rel="noopener noreferrer">GitHub</a>
             </div>
           </article>
         </div>
@@ -318,8 +322,8 @@
             <div class="contact__actions">
               <a class="button button--primary" href="mailto:nnbakirtzis@gmail.com">Email me</a>
               <a class="button button--ghost" href="tel:+12163991294">Call</a>
-              <a class="button button--ghost" href="https://www.linkedin.com/in/nikolaos-bakirtzis/">LinkedIn</a>
-              <a class="button button--ghost" href="https://github.com/nnbakirtzis">GitHub</a>
+              <a class="button button--ghost" href="https://www.linkedin.com/in/nikolaos-bakirtzis/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+              <a class="button button--ghost" href="https://github.com/nnbakirtzis" target="_blank" rel="noopener noreferrer">GitHub</a>
             </div>
           </div>
           <aside class="contact__info" data-scroll-reveal data-scroll-delay="160">
@@ -338,9 +342,10 @@
       <p>&copy; <span id="year"></span> Nikolaos Bakirtzis. Crafted with intent.</p>
     </footer>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/three@0.158.0/build/three.min.js"></script>
-    <script src="script.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/@studio-freight/lenis@1.0.42/bundled/lenis.min.js"></script>
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/three@0.158.0/build/three.min.js"></script>
+    <script defer src="script.js"></script>
   </body>
 </html>

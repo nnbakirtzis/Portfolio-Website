@@ -5,8 +5,8 @@
   --color-surface-raised:  rgba(18, 24, 38, 0.85);
   --color-surface-muted:   rgba(255, 255, 255, 0.03);
   --color-text-primary:    #e8eaf0;
-  --color-text-secondary:  #7a8394;
-  --color-text-muted:      #4a5260;
+  --color-text-secondary:  #9aa3b2;
+  --color-text-muted:      #7a8394;
   --color-accent:          #00d4ff;
   --color-accent-dim:      rgba(0, 212, 255, 0.12);
   --color-accent-glow:     rgba(0, 212, 255, 0.25);
@@ -144,7 +144,8 @@ main {
   display: grid;
   gap: 0.5rem;
   mix-blend-mode: lighten;
-  opacity: 0.4;
+  /* Lower prominence so hero cards stay readable */
+  opacity: 0.18;
 }
 
 .code-overlay__glow {
@@ -166,7 +167,6 @@ main {
   color: var(--color-accent);
   box-shadow: 0 25px 55px rgba(0, 0, 0, 0.28);
   border: 1px solid var(--color-border-accent);
-  backdrop-filter: blur(18px);
   text-shadow: 0 0 12px rgba(0, 212, 255, 0.4);
   white-space: pre-wrap;
   overflow: hidden;
@@ -314,10 +314,11 @@ main {
 
 .hero {
   display: grid;
-  gap: 3rem;
+  gap: 2rem;
   grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
   align-items: center;
-  padding: 8rem 3vw 6rem;
+  /* Tighter top padding so CTAs stay in the first viewport on laptop heights */
+  padding: 5.5rem 3vw 4rem;
   max-width: var(--max-width);
   margin: 0 auto;
 }
@@ -325,11 +326,11 @@ main {
 .hero__intro {
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
-  padding: 2.25rem;
+  gap: 1.1rem;
+  padding: 1.75rem 1.9rem;
   border-radius: var(--radius-lg);
   background: var(--color-surface);
-  backdrop-filter: blur(20px) saturate(120%);
+  backdrop-filter: blur(16px) saturate(120%);
   border: 1px solid var(--color-border);
   box-shadow: var(--shadow-subtle);
   transition: border-color var(--transition-default), box-shadow var(--transition-default), transform var(--transition-default);
@@ -356,14 +357,15 @@ main {
 }
 
 .hero__title {
-  font-size: clamp(2.8rem, 4vw, 3.6rem);
+  font-size: clamp(2.2rem, 3.4vw, 2.9rem);
   font-weight: 600;
-  line-height: 1.05;
+  line-height: 1.08;
 }
 
 .hero__description {
-  font-size: 1.1rem;
-  max-width: 34ch;
+  font-size: 1.02rem;
+  max-width: 42ch;
+  margin-bottom: 0;
 }
 
 .hero__actions {
@@ -383,9 +385,6 @@ main {
   font-weight: 500;
   letter-spacing: 0.015em;
   transition: transform var(--transition-default), box-shadow var(--transition-default), background var(--transition-default), color var(--transition-default);
-  transform: translateZ(0);
-  transform-style: preserve-3d;
-  will-change: transform, box-shadow;
 }
 
 .button--primary {
@@ -431,20 +430,18 @@ main {
 .hero__panel {
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  gap: 1rem;
 }
 
 .hero__card {
   background: var(--color-surface);
   border-radius: var(--radius-lg);
-  padding: 2rem;
+  padding: 1.5rem 1.65rem;
   box-shadow: var(--shadow-subtle);
   border: 1px solid var(--color-border);
-  backdrop-filter: blur(20px) saturate(120%);
+  backdrop-filter: blur(16px) saturate(120%);
   position: relative;
   transition: transform var(--transition-default), box-shadow var(--transition-default), border-color var(--transition-default);
-  transform: translateZ(0);
-  will-change: transform, box-shadow;
 }
 
 .hero__card-label {
@@ -516,8 +513,7 @@ main {
 .about__story {
   padding: 2.1rem;
   border-radius: var(--radius-lg);
-  background: var(--color-surface);
-  backdrop-filter: blur(20px) saturate(120%);
+  background: var(--color-surface-raised);
   border: 1px solid var(--color-border);
   box-shadow: var(--shadow-subtle);
   transition: border-color var(--transition-default), box-shadow var(--transition-default), transform var(--transition-default);
@@ -534,8 +530,7 @@ main {
   gap: 1.5rem;
   align-content: start;
   padding: 2rem;
-  background: var(--color-surface);
-  backdrop-filter: blur(20px) saturate(120%);
+  background: var(--color-surface-raised);
   border-radius: var(--radius-lg);
   border: 1px solid var(--color-border);
   box-shadow: var(--shadow-subtle);
@@ -574,11 +569,10 @@ main {
 }
 
 .skills-card {
-  background: var(--color-surface);
+  background: var(--color-surface-raised);
   border-radius: var(--radius-md);
   padding: 2.4rem;
   border: 1px solid var(--color-border);
-  backdrop-filter: blur(20px) saturate(120%);
   box-shadow: var(--shadow-subtle);
   transition: transform var(--transition-default), box-shadow var(--transition-default), border-color var(--transition-default);
 }
@@ -612,13 +606,10 @@ main {
   grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
   padding: 2.8rem;
   border-radius: var(--radius-md);
-  background: var(--color-surface);
+  background: var(--color-surface-raised);
   border: 1px solid var(--color-border);
-  backdrop-filter: blur(20px) saturate(120%);
   box-shadow: var(--shadow-subtle);
   transition: transform var(--transition-default), box-shadow var(--transition-default), border-color var(--transition-default);
-  transform: translateZ(0);
-  will-change: transform, box-shadow;
 }
 
 .timeline__item:hover,
@@ -657,9 +648,8 @@ main {
 .project-card {
   border-radius: var(--radius-md);
   padding: 2.4rem;
-  background: var(--color-surface);
+  background: var(--color-surface-raised);
   border: 1px solid var(--color-border);
-  backdrop-filter: blur(20px) saturate(120%);
   box-shadow: var(--shadow-subtle);
   display: flex;
   flex-direction: column;
@@ -717,12 +707,9 @@ main {
   gap: 1.4rem;
   box-shadow: var(--shadow-soft);
   border: 1px solid var(--color-border);
-  backdrop-filter: blur(20px) saturate(120%);
   position: relative;
   overflow: hidden;
   transition: transform var(--transition-default), box-shadow var(--transition-default), border-color var(--transition-default);
-  transform: translateZ(0);
-  will-change: transform, box-shadow;
 }
 
 .contact__card::before {
@@ -765,13 +752,10 @@ main {
 .contact__info {
   padding: 2.4rem;
   border-radius: var(--radius-md);
-  background: var(--color-surface);
-  backdrop-filter: blur(20px) saturate(120%);
+  background: var(--color-surface-raised);
   border: 1px solid var(--color-border);
   box-shadow: var(--shadow-subtle);
   transition: transform var(--transition-default), box-shadow var(--transition-default), border-color var(--transition-default);
-  transform: translateZ(0);
-  will-change: transform, box-shadow;
 }
 
 .contact__info:hover,
@@ -802,44 +786,7 @@ main {
   font-size: 0.9rem;
 }
 
-/* Custom cursor */
-.cursor,
-.cursor-dot {
-  position: fixed;
-  pointer-events: none;
-  z-index: 9999;
-  border-radius: 50%;
-  transform: translate(-50%, -50%);
-  transition: opacity 0.3s ease;
-}
-
-.cursor {
-  width: 36px;
-  height: 36px;
-  border: 1px solid rgba(0, 212, 255, 0.5);
-  mix-blend-mode: screen;
-  transition: width 0.2s ease, height 0.2s ease, border-color 0.2s ease, opacity 0.3s ease;
-}
-
-.cursor-dot {
-  width: 6px;
-  height: 6px;
-  background: var(--color-accent);
-  box-shadow: 0 0 8px rgba(0, 212, 255, 0.8);
-}
-
-.cursor.is-hovering {
-  width: 52px;
-  height: 52px;
-  border-color: var(--color-accent);
-}
-
-@media not all and (hover: hover) and (pointer: fine) {
-  .cursor,
-  .cursor-dot {
-    display: none;
-  }
-}
+/* Custom cursor removed — native pointer is clearer and cheaper */
 
 @media (max-width: 980px) {
   .code-overlay {

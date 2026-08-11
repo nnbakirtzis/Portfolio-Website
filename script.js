@@ -9,17 +9,21 @@ if (yearTarget) {
   yearTarget.textContent = new Date().getFullYear();
 }
 
+/** Sync mobile nav open state with aria-expanded for assistive tech */
+const setNavOpen = (isOpen) => {
+  if (!navToggle || !navLinks) return;
+  navLinks.classList.toggle('is-open', isOpen);
+  navToggle.classList.toggle('is-open', isOpen);
+  navToggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+};
+
 if (navToggle && navLinks) {
   navToggle.addEventListener('click', () => {
-    navLinks.classList.toggle('is-open');
-    navToggle.classList.toggle('is-open');
+    setNavOpen(!navLinks.classList.contains('is-open'));
   });
 
   navLinks.querySelectorAll('a').forEach((link) => {
-    link.addEventListener('click', () => {
-      navLinks.classList.remove('is-open');
-      navToggle.classList.remove('is-open');
-    });
+    link.addEventListener('click', () => setNavOpen(false));
   });
 }
 
@@ -40,19 +44,35 @@ const sectionObserver = (() => {
   const map = new Map();
   navAnchors.forEach((anchor) => map.set(anchor.getAttribute('href'), anchor));
 
+  const sectionRatios = new Map();
+  sections.forEach((section) => sectionRatios.set(section.id, 0));
+
+  const setActiveFromRatios = () => {
+    let bestId = null;
+    let bestRatio = 0;
+    sectionRatios.forEach((ratio, id) => {
+      if (ratio > bestRatio) {
+        bestRatio = ratio;
+        bestId = id;
+      }
+    });
+    if (!bestId) return;
+
+    const link = map.get(`#${bestId}`);
+    if (!link) return;
+
+    navAnchors.forEach((anchor) => anchor.classList.remove('is-active'));
+    link.classList.add('is-active');
+  };
+
   const observer = new IntersectionObserver(
     (entries) => {
       entries.forEach((entry) => {
-        const id = `#${entry.target.id}`;
-        const link = map.get(id);
-        if (!link) return;
-        if (entry.isIntersecting) {
-          navAnchors.forEach((anchor) => anchor.classList.remove('is-active'));
-          link.classList.add('is-active');
-        }
+        sectionRatios.set(entry.target.id, entry.isIntersecting ? entry.intersectionRatio : 0);
       });
+      setActiveFromRatios();
     },
-    { rootMargin: '-35% 0px -50% 0px', threshold: 0.15 }
+    { rootMargin: '-35% 0px -50% 0px', threshold: [0, 0.05, 0.1, 0.15, 0.25] }
   );
 
   sections.forEach((section) => observer.observe(section));
@@ -125,13 +145,21 @@ if (codeOverlayDisplay) {
   }
 }
 
+/** Skip WebGL particles on phones / coarse pointers / reduced motion */
+const shouldRunParticles = () => {
+  if (prefersReducedMotion) return false;
+  if (typeof THREE === 'undefined') return false;
+  if (window.matchMedia('(max-width: 980px)').matches) return false;
+  if (window.matchMedia('(pointer: coarse)').matches) return false;
+  return true;
+};
+
 // Particle background using Three.js
 const initParticleBackground = () => {
-  if (prefersReducedMotion) return;
-  if (typeof THREE === 'undefined') return;
+  if (!shouldRunParticles()) return;
 
   const container = document.getElementById('vanta-bg');
-  if (!container) return;
+  if (!container || container.querySelector('canvas')) return;
 
   const scene = new THREE.Scene();
   const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
@@ -139,11 +167,11 @@ const initParticleBackground = () => {
 
   const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: false });
   renderer.setSize(window.innerWidth, window.innerHeight);
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
   renderer.setClearColor(0x000000, 0);
   container.appendChild(renderer.domElement);
 
-  const COUNT = 600;
+  const COUNT = 250;
   const positions = new Float32Array(COUNT * 3);
   const velocities = new Float32Array(COUNT);
 
@@ -170,14 +198,17 @@ const initParticleBackground = () => {
 
   let mouseX = 0;
   let mouseY = 0;
+  let rafId = 0;
+  let running = false;
 
   window.addEventListener('mousemove', (e) => {
     mouseX = (e.clientX / window.innerWidth - 0.5) * 0.5;
     mouseY = (e.clientY / window.innerHeight - 0.5) * 0.5;
   }, { passive: true });
 
-  const animate = () => {
-    requestAnimationFrame(animate);
+  const tick = () => {
+    if (!running) return;
+    rafId = requestAnimationFrame(tick);
 
     const pos = geometry.attributes.position.array;
     for (let i = 0; i < COUNT; i++) {
@@ -195,16 +226,50 @@ const initParticleBackground = () => {
     renderer.render(scene, camera);
   };
 
-  animate();
+  const startLoop = () => {
+    if (running || document.hidden) return;
+    running = true;
+    tick();
+  };
+
+  const stopLoop = () => {
+    running = false;
+    if (rafId) cancelAnimationFrame(rafId);
+    rafId = 0;
+  };
+
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) stopLoop();
+    else startLoop();
+  });
 
   window.addEventListener('resize', () => {
+    if (window.matchMedia('(max-width: 980px)').matches) {
+      stopLoop();
+      renderer.domElement.style.display = 'none';
+      return;
+    }
+    renderer.domElement.style.display = '';
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
     renderer.setSize(window.innerWidth, window.innerHeight);
+    startLoop();
   }, { passive: true });
+
+  startLoop();
 };
 
-window.addEventListener('load', initParticleBackground);
+/** Defer particle init until the browser is idle after load */
+const scheduleParticleInit = () => {
+  const run = () => initParticleBackground();
+  if ('requestIdleCallback' in window) {
+    requestIdleCallback(run, { timeout: 1500 });
+  } else {
+    setTimeout(run, 200);
+  }
+};
+
+window.addEventListener('load', scheduleParticleInit);
 
 // Lenis smooth scroll + GSAP animations
 window.addEventListener('DOMContentLoaded', () => {
@@ -265,37 +330,6 @@ window.addEventListener('DOMContentLoaded', () => {
     });
   }
 });
-
-// Custom cursor
-const cursorRing = document.querySelector('.cursor');
-const cursorDot = document.querySelector('.cursor-dot');
-
-if (cursorRing && cursorDot && window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
-  let ringX = 0, ringY = 0;
-  let targetX = 0, targetY = 0;
-
-  window.addEventListener('mousemove', (e) => {
-    targetX = e.clientX;
-    targetY = e.clientY;
-    cursorDot.style.left = e.clientX + 'px';
-    cursorDot.style.top = e.clientY + 'px';
-  }, { passive: true });
-
-  const animateCursor = () => {
-    ringX += (targetX - ringX) * 0.12;
-    ringY += (targetY - ringY) * 0.12;
-    cursorRing.style.left = ringX + 'px';
-    cursorRing.style.top = ringY + 'px';
-    requestAnimationFrame(animateCursor);
-  };
-
-  animateCursor();
-
-  document.querySelectorAll('a, button').forEach((el) => {
-    el.addEventListener('mouseenter', () => cursorRing.classList.add('is-hovering'));
-    el.addEventListener('mouseleave', () => cursorRing.classList.remove('is-hovering'));
-  });
-}
 
 prefersReducedMotionQuery.addEventListener('change', (event) => {
   prefersReducedMotion = event.matches;
