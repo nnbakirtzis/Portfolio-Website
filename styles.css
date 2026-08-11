@@ -595,6 +595,50 @@ main {
   margin-bottom: 0.45rem;
 }
 
+.certs-grid {
+  display: grid;
+  gap: 1.8rem;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.cert-card {
+  background: var(--color-surface-raised);
+  border-radius: var(--radius-md);
+  padding: 2.4rem;
+  border: 1px solid var(--color-border);
+  box-shadow: var(--shadow-subtle);
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  transition: transform var(--transition-default), box-shadow var(--transition-default), border-color var(--transition-default);
+}
+
+.cert-card:hover,
+.cert-card:focus-within {
+  border-color: var(--color-border-accent);
+  box-shadow: var(--shadow-glow-cyan), var(--shadow-soft);
+  transform: translate3d(0, -6px, 0) scale(1.005);
+}
+
+.cert-card__issuer {
+  font-size: 0.78rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--color-text-secondary);
+  font-family: 'JetBrains Mono', 'Fira Code', 'SF Mono', monospace;
+}
+
+.cert-card__title {
+  font-size: 1.15rem;
+  margin: 0;
+}
+
+.cert-card p {
+  margin: 0;
+  font-size: 0.95rem;
+  color: var(--color-text-secondary);
+}
+
 .timeline {
   display: grid;
   gap: 2.8rem;
@@ -803,7 +847,8 @@ main {
     grid-template-columns: 1fr;
   }
 
-  .skills-grid {
+  .skills-grid,
+  .certs-grid {
     grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
   }
 }
@@ -889,6 +934,7 @@ main {
   .hero__intro,
   .hero__card,
   .skills-card,
+  .cert-card,
   .timeline__item,
   .project-card,
   .contact__card,
