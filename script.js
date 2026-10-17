@@ -5,6 +5,9 @@ const yearTarget = document.getElementById('year');
 const prefersReducedMotionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
 let prefersReducedMotion = prefersReducedMotionQuery.matches;
 
+/** Set by the inline <head> script; cleared once GSAP owns the hidden state (or isn't coming) */
+const clearRevealPending = () => document.documentElement.classList.remove('reveal-pending');
+
 if (yearTarget) {
   yearTarget.textContent = new Date().getFullYear();
 }
@@ -17,13 +20,27 @@ const setNavOpen = (isOpen) => {
   navToggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
 };
 
+const isNavOpen = () => Boolean(navLinks && navLinks.classList.contains('is-open'));
+
 if (navToggle && navLinks) {
   navToggle.addEventListener('click', () => {
-    setNavOpen(!navLinks.classList.contains('is-open'));
+    setNavOpen(!isNavOpen());
   });
 
   navLinks.querySelectorAll('a').forEach((link) => {
     link.addEventListener('click', () => setNavOpen(false));
+  });
+
+  document.addEventListener('keydown', (event) => {
+    if (event.key !== 'Escape' || !isNavOpen()) return;
+    setNavOpen(false);
+    navToggle.focus();
+  });
+
+  document.addEventListener('click', (event) => {
+    if (!isNavOpen()) return;
+    if (navLinks.contains(event.target) || navToggle.contains(event.target)) return;
+    setNavOpen(false);
   });
 }
 
@@ -79,26 +96,75 @@ const sectionObserver = (() => {
   return observer;
 })();
 
-// Code overlay animation
-const codeOverlayDisplay = document.getElementById('code-overlay');
+// Hero terminal typewriter
+const terminalCode = document.getElementById('terminal-code');
 const codeSnippets = [
-  `@app.post("/ingest")
-async def ingest_station(payload: StationHealth):
+  `# ingest/station_health.py
+@app.post("/ingest")
+async def ingest(payload: StationHealth):
     await influx.write(payload.to_points())
-    await db.upsert_station(payload.station_id, payload.status)
-    return {"ok": True, "station": payload.station_id}`,
-  `async function retrieveAndAnswer(query) {
+    await db.upsert_station(payload.id, payload.status)
+    return {"ok": True, "station": payload.id}`,
+  `// rag/answer.ts
+async function retrieveAndAnswer(query) {
   const docs = await rag.search(query, { topK: 5 });
-  const grounded = docs.map(d => d.citation);
-  return llm.complete({ prompt: query, context: grounded });
+  const cited = docs.map((d) => d.citation);
+  return llm.complete({ prompt: query, context: cited });
 }`,
-  `const handoff = await agent.run({
+  `// agents/handoff.ts
+const handoff = await agent.run({
   role: "career-planner",
   context: sharedState,
-  tools: ["jobMatch", "compForecast"]
+  tools: ["jobMatch", "compForecast"],
 });
 await persistUserState(handoff.nextState);`
 ];
+
+/** Split a snippet into [{ text, cls }] runs for lightweight syntax colouring */
+const tokenizeSnippet = (source) => {
+  const pattern = /(#[^\n]*|\/\/[^\n]*)|("[^"\n]*")|(@\w+(?:\.\w+)*)|\b(async|await|def|return|const|function|True)\b|\b(\d+)\b/g;
+  const classes = ['tok-comment', 'tok-string', 'tok-deco', 'tok-key', 'tok-num'];
+  const tokens = [];
+  let lastIndex = 0;
+  let match;
+
+  while ((match = pattern.exec(source)) !== null) {
+    if (match.index > lastIndex) tokens.push({ text: source.slice(lastIndex, match.index), cls: '' });
+    const groupIndex = match.slice(1).findIndex((group) => group !== undefined);
+    tokens.push({ text: match[0], cls: classes[groupIndex] });
+    lastIndex = pattern.lastIndex;
+  }
+  if (lastIndex < source.length) tokens.push({ text: source.slice(lastIndex), cls: '' });
+  return tokens;
+};
+
+const tokenizedSnippets = codeSnippets.map(tokenizeSnippet);
+const terminalCaret = document.createElement('span');
+terminalCaret.className = 'terminal__caret';
+
+/** Render the first `count` characters of a snippet as coloured spans (textContent only) */
+const renderSnippet = (snippetIndex, count) => {
+  if (!terminalCode) return;
+  const fragment = document.createDocumentFragment();
+  let remaining = count;
+
+  for (const token of tokenizedSnippets[snippetIndex]) {
+    if (remaining <= 0) break;
+    const text = token.text.slice(0, remaining);
+    remaining -= text.length;
+    if (token.cls) {
+      const span = document.createElement('span');
+      span.className = token.cls;
+      span.textContent = text;
+      fragment.appendChild(span);
+    } else {
+      fragment.appendChild(document.createTextNode(text));
+    }
+  }
+
+  fragment.appendChild(terminalCaret);
+  terminalCode.replaceChildren(fragment);
+};
 
 let codeAnimationTimer;
 let currentSnippetIndex = 0;
@@ -112,37 +178,52 @@ const clearCodeAnimation = () => {
 };
 
 const typeCodeCharacter = () => {
-  if (!codeOverlayDisplay) return;
+  if (!terminalCode) return;
   const snippet = codeSnippets[currentSnippetIndex];
-  codeOverlayDisplay.textContent = snippet.slice(0, currentCharIndex);
+  renderSnippet(currentSnippetIndex, currentCharIndex);
   currentCharIndex += 1;
 
   if (currentCharIndex <= snippet.length) {
-    codeAnimationTimer = setTimeout(typeCodeCharacter, 42 + Math.random() * 38);
+    codeAnimationTimer = setTimeout(typeCodeCharacter, 34 + Math.random() * 34);
   } else {
     codeAnimationTimer = setTimeout(() => {
       currentSnippetIndex = (currentSnippetIndex + 1) % codeSnippets.length;
       currentCharIndex = 0;
       codeAnimationTimer = setTimeout(typeCodeCharacter, 220);
-    }, 1800);
+    }, 2200);
   }
 };
 
 const startCodeAnimation = () => {
-  if (!codeOverlayDisplay || prefersReducedMotion) return;
+  if (!terminalCode || prefersReducedMotion) return;
   clearCodeAnimation();
   currentSnippetIndex = 0;
   currentCharIndex = 0;
-  codeOverlayDisplay.textContent = '';
-  codeAnimationTimer = setTimeout(typeCodeCharacter, 320);
+  renderSnippet(0, 0);
+  codeAnimationTimer = setTimeout(typeCodeCharacter, 900);
 };
 
-if (codeOverlayDisplay) {
+const renderStaticSnippet = () => {
+  clearCodeAnimation();
+  renderSnippet(0, codeSnippets[0].length);
+};
+
+if (terminalCode) {
   if (prefersReducedMotion) {
-    codeOverlayDisplay.textContent = codeSnippets[0];
+    renderStaticSnippet();
   } else {
     startCodeAnimation();
   }
+
+  // Pause typing in background tabs; resume where it left off
+  document.addEventListener('visibilitychange', () => {
+    if (prefersReducedMotion) return;
+    if (document.hidden) {
+      clearCodeAnimation();
+    } else if (!codeAnimationTimer) {
+      codeAnimationTimer = setTimeout(typeCodeCharacter, 320);
+    }
+  });
 }
 
 /** Skip WebGL particles on phones / coarse pointers / reduced motion */
@@ -271,6 +352,17 @@ const scheduleParticleInit = () => {
 
 window.addEventListener('load', scheduleParticleInit);
 
+// Cursor spotlight: feed pointer position to the hovered card's ::after glow
+if (window.matchMedia('(hover: hover) and (pointer: fine)').matches && !prefersReducedMotion) {
+  document.addEventListener('pointermove', (event) => {
+    const card = event.target instanceof Element ? event.target.closest('.spotlight') : null;
+    if (!card) return;
+    const rect = card.getBoundingClientRect();
+    card.style.setProperty('--mx', `${event.clientX - rect.left}px`);
+    card.style.setProperty('--my', `${event.clientY - rect.top}px`);
+  }, { passive: true });
+}
+
 // Lenis smooth scroll + GSAP animations
 window.addEventListener('DOMContentLoaded', () => {
   if (!prefersReducedMotion && typeof Lenis !== 'undefined') {
@@ -284,60 +376,76 @@ window.addEventListener('DOMContentLoaded', () => {
       gsap.ticker.add((time) => lenis.raf(time * 1000));
       gsap.ticker.lagSmoothing(0);
     }
+
+    // Glide to in-page anchors, landing below the sticky nav
+    document.querySelectorAll('a[href^="#"]:not(.skip-link)').forEach((anchor) => {
+      anchor.addEventListener('click', (event) => {
+        const hash = anchor.getAttribute('href');
+        if (hash === '#top') {
+          event.preventDefault();
+          lenis.scrollTo(0);
+          return;
+        }
+        const target = hash.length > 1 ? document.querySelector(hash) : null;
+        if (!target) return;
+        event.preventDefault();
+        lenis.scrollTo(target, { offset: -(navShell ? navShell.offsetHeight : 0) });
+      });
+    });
   }
 
   if (!prefersReducedMotion && typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
     gsap.registerPlugin(ScrollTrigger);
 
-    // Scroll reveal batch
+    // Scroll reveal batch: hidden state is set here, then animated in on enter.
+    // onLeave covers elements the page was already scrolled past on load.
+    const reveal = (elements) => gsap.to(elements, {
+      opacity: 1, y: 0, scale: 1, duration: 0.85, ease: 'power3.out', stagger: 0.08, overwrite: true
+    });
+    gsap.set('[data-scroll-reveal]', { opacity: 0, y: 40, scale: 0.97 });
+    // GSAP now holds the hidden state inline; drop the CSS gate before the hero
+    // .from() tweens read their end values (same task, so nothing paints in between)
+    clearRevealPending();
     ScrollTrigger.batch('[data-scroll-reveal]', {
-      onEnter: (elements) => gsap.fromTo(elements,
-        { opacity: 0, y: 40, scale: 0.97 },
-        { opacity: 1, y: 0, scale: 1, duration: 0.85, ease: 'power3.out', stagger: 0.08 }
-      ),
+      onEnter: reveal,
+      onLeave: reveal,
       once: true,
       start: 'top 88%'
     });
 
     // Hero entrance timeline
     const heroTl = gsap.timeline({ delay: 0.1 });
-    const heroEyebrow = document.querySelector('.hero__eyebrow');
-    const heroTitle = document.querySelector('.hero__title');
-    const heroDesc = document.querySelector('.hero__description');
-    const heroActions = document.querySelector('.hero__actions');
+    const heroIntroItems = document.querySelectorAll('.hero__intro > *');
     const heroPanelItems = document.querySelectorAll('.hero__panel > *');
 
-    if (heroEyebrow) heroTl.from(heroEyebrow, { opacity: 0, y: 20, duration: 0.6, ease: 'power3.out' });
-    if (heroTitle) heroTl.from(heroTitle, { opacity: 0, y: 30, duration: 0.7, ease: 'power3.out' }, '-=0.3');
-    if (heroDesc) heroTl.from(heroDesc, { opacity: 0, y: 20, duration: 0.6, ease: 'power3.out' }, '-=0.3');
-    if (heroActions) heroTl.from(heroActions, { opacity: 0, y: 20, duration: 0.5, ease: 'power3.out' }, '-=0.2');
+    if (heroIntroItems.length) {
+      heroTl.from(heroIntroItems, { opacity: 0, y: 24, duration: 0.6, ease: 'power3.out', stagger: 0.08 });
+    }
     if (heroPanelItems.length) {
-      heroTl.from(heroPanelItems, { opacity: 0, y: 30, duration: 0.6, ease: 'power3.out', stagger: 0.12 }, '-=0.3');
+      heroTl.from(heroPanelItems, { opacity: 0, y: 30, duration: 0.6, ease: 'power3.out', stagger: 0.12 }, '-=0.45');
     }
 
-    // Section header parallax
-    document.querySelectorAll('.section__header').forEach((header) => {
-      gsap.to(header, {
-        y: -30,
-        ease: 'none',
-        scrollTrigger: {
-          trigger: header,
-          start: 'top bottom',
-          end: 'bottom top',
-          scrub: 1.5
-        }
-      });
+    // Count the impact stats up from zero as they appear
+    document.querySelectorAll('[data-count-to]').forEach((el) => {
+      const target = Number(el.dataset.countTo);
+      const counter = { value: 0 };
+      el.textContent = '0';
+      heroTl.to(counter, {
+        value: target,
+        duration: 1.4,
+        ease: 'power2.out',
+        onUpdate: () => { el.textContent = Math.round(counter.value); }
+      }, 0.55);
     });
   }
+
+  clearRevealPending();
 });
 
 prefersReducedMotionQuery.addEventListener('change', (event) => {
   prefersReducedMotion = event.matches;
   if (prefersReducedMotion) {
-    clearCodeAnimation();
-    if (codeOverlayDisplay) {
-      codeOverlayDisplay.textContent = codeSnippets[0];
-    }
+    renderStaticSnippet();
   } else {
     startCodeAnimation();
   }

@@ -8,23 +8,45 @@
       name="description"
       content="Software engineer building production applications, data pipelines, and LLM/agentic AI systems. Based in Austin, TX."
     />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Nikolaos Bakirtzis · Software Engineer" />
+    <meta
+      property="og:description"
+      content="Production systems from data pipelines to AI workflows. Software developer at UT Austin's Bureau of Economic Geology (TexNet)."
+    />
+    <!-- TODO: add <meta property="og:image"> with an absolute URL once the deploy domain is known -->
+    <meta name="twitter:card" content="summary" />
+    <meta name="theme-color" content="#080b14" />
+    <link
+      rel="icon"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23080b14'/%3E%3Ctext x='50%25' y='53%25' dominant-baseline='middle' text-anchor='middle' font-family='monospace' font-size='28' font-weight='700' fill='%2300d4ff'%3ENB%3C/text%3E%3C/svg%3E"
+    />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="styles.css?v=20260811" />
+    <link rel="stylesheet" href="styles.css?v=20261017" />
+    <script>
+      // Hide reveal targets before first paint so GSAP can animate them in without a flash.
+      // Failsafe: if script.js never clears the class, show everything anyway.
+      (function () {
+        if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+        var root = document.documentElement;
+        root.classList.add('reveal-pending');
+        setTimeout(function () {
+          root.classList.remove('reveal-pending');
+        }, 2500);
+      })();
+    </script>
   </head>
   <body>
+    <a class="skip-link" href="#main">Skip to content</a>
     <div id="vanta-bg" aria-hidden="true"></div>
     <div class="noise-overlay" aria-hidden="true"></div>
-    <div class="code-overlay" aria-hidden="true">
-      <div class="code-overlay__glow"></div>
-      <pre class="code-overlay__display" id="code-overlay"></pre>
-    </div>
     <header class="nav-shell" id="top">
-      <nav class="nav">
+      <nav class="nav" aria-label="Primary">
         <a class="nav__brand" href="#top">
           <picture>
             <source srcset="assets/profile-88.webp" type="image/webp" />
@@ -56,45 +78,67 @@
       </nav>
     </header>
 
-    <main>
-      <section class="hero" aria-labelledby="hero-title" data-scroll-reveal>
-        <div class="hero__intro">
+    <main id="main" tabindex="-1">
+      <section class="hero" aria-labelledby="hero-title">
+        <div class="hero__intro spotlight">
+          <p class="hero__status"><span class="status-dot" aria-hidden="true"></span>Available for full-time roles</p>
           <p class="hero__eyebrow">Software Engineer · AI &amp; Production Systems</p>
-          <h1 class="hero__title" id="hero-title">Building production systems that scale from data pipelines to AI workflows</h1>
+          <h1 class="hero__title" id="hero-title">Nikolaos Bakirtzis</h1>
+          <p class="hero__tagline">
+            Building <span class="text-gradient">production systems</span> that scale, from data pipelines to
+            <span class="text-gradient">AI workflows</span>.
+          </p>
           <p class="hero__description">
-            Software engineer with 2 years of experience shipping production applications, automation systems,
-            data pipelines, and operational infrastructure — plus hands-on LLM and agentic AI applications.
-            I own systems from architecture through deployment.
+            I ship production applications, automation, data pipelines, and LLM/agentic AI systems, and I own
+            them from architecture through deployment.
           </p>
           <div class="hero__actions">
             <a class="button button--primary" href="#projects">View Portfolio</a>
             <a class="button button--ghost" href="assets/resume.pdf" download>Download Resume</a>
           </div>
+          <dl class="hero__stats">
+            <div class="hero__stat">
+              <dt>Seismic stations monitored</dt>
+              <dd><span data-count-to="100">100</span>+</dd>
+            </div>
+            <div class="hero__stat">
+              <dt>Faster scientific workflows</dt>
+              <dd>~<span data-count-to="50">50</span>%</dd>
+            </div>
+            <div class="hero__stat">
+              <dt>Shipping production systems</dt>
+              <dd><span data-count-to="2">2</span> yrs</dd>
+            </div>
+          </dl>
         </div>
         <aside class="hero__panel">
-          <div class="hero__card" data-scroll-reveal data-scroll-delay="120">
+          <div class="hero__card spotlight">
             <p class="hero__card-label">Currently</p>
             <p class="hero__card-title">Software Developer</p>
             <p class="hero__card-meta">UT Austin · Bureau of Economic Geology (TexNet) · August 2024 — Present</p>
           </div>
-          <div class="hero__card hero__card--secondary" data-scroll-reveal data-scroll-delay="220">
-            <p class="hero__card-label">Toolset</p>
-            <ul>
-              <li>Python · TypeScript/JavaScript · SQL · FastAPI · React/Next.js</li>
-              <li>PostgreSQL · InfluxDB · Grafana · Docker · Linux</li>
-              <li>LLM APIs · RAG · Agentic workflows</li>
-            </ul>
+          <div class="terminal">
+            <div class="terminal__bar" aria-hidden="true">
+              <span class="terminal__dots"><span></span><span></span><span></span></span>
+              <span class="terminal__title">~/nikolaos — zsh</span>
+            </div>
+            <pre class="terminal__code" aria-hidden="true"><code id="terminal-code"># ingest/station_health.py
+@app.post("/ingest")
+async def ingest(payload: StationHealth):
+    await influx.write(payload.to_points())
+    await db.upsert_station(payload.id, payload.status)
+    return {"ok": True, "station": payload.id}</code></pre>
           </div>
         </aside>
       </section>
 
-      <section class="section" id="about" aria-labelledby="about-heading" data-scroll-reveal>
-        <div class="section__header">
+      <section class="section" id="about" aria-labelledby="about-heading">
+        <div class="section__header" data-scroll-reveal>
           <h2 id="about-heading">Who I am</h2>
           <p>Engineer by trade. Builder of reliable systems.</p>
         </div>
         <div class="about">
-          <article class="about__story">
+          <article class="about__story spotlight" data-scroll-reveal>
             <p>
               I'm a software engineer who builds production applications, automation systems, data pipelines,
               and operational infrastructure. Experienced with Python, TypeScript/JavaScript, SQL, Linux, APIs,
@@ -106,7 +150,7 @@
               architecture through production deployment.
             </p>
           </article>
-          <aside class="about__meta">
+          <aside class="about__meta spotlight" data-scroll-reveal>
             <div>
               <span class="about__meta-label">Based in</span>
               <span class="about__meta-value">Austin, TX</span>
@@ -123,64 +167,90 @@
         </div>
       </section>
 
-      <section class="section section--accent" id="skills" aria-labelledby="skills-heading" data-scroll-reveal>
-        <div class="section__header">
+      <section class="section section--accent" id="skills" aria-labelledby="skills-heading">
+        <div class="section__header" data-scroll-reveal>
           <h2 id="skills-heading">Skills</h2>
           <p>Production engineering, AI systems, and operational infrastructure.</p>
         </div>
         <div class="skills-grid">
-          <article class="skills-card" data-scroll-reveal data-scroll-delay="80">
+          <article class="skills-card spotlight" data-scroll-reveal>
             <h3 class="skills-card__title">Core Engineering</h3>
-            <ul>
-              <li>Production scientific &amp; web applications</li>
-              <li>Python automation &amp; data-processing pipelines</li>
-              <li>API design, database-backed systems, observability</li>
-              <li>Cross-stack debugging (apps, DBs, networks, services)</li>
+            <p class="skills-card__summary">
+              Production scientific &amp; web applications, automation pipelines, and cross-stack debugging
+              across apps, databases, networks, and services.
+            </p>
+            <ul class="chips" aria-label="Core engineering skills">
+              <li class="chip">Python</li>
+              <li class="chip">TypeScript</li>
+              <li class="chip">JavaScript</li>
+              <li class="chip">SQL</li>
+              <li class="chip">FastAPI</li>
+              <li class="chip">React/Next.js</li>
+              <li class="chip">REST APIs</li>
+              <li class="chip">Data pipelines</li>
+              <li class="chip">Observability</li>
             </ul>
           </article>
-          <article class="skills-card" data-scroll-reveal data-scroll-delay="160">
+          <article class="skills-card spotlight" data-scroll-reveal>
             <h3 class="skills-card__title">AI &amp; Intelligent Systems</h3>
-            <ul>
-              <li>LLM APIs, agentic software development</li>
-              <li>RAG applications, prompt engineering</li>
-              <li>Multi-agent workflows, structured agent handoffs</li>
-              <li>Citation-backed / grounded response design</li>
+            <p class="skills-card__summary">
+              LLM applications and agentic software with grounded, citation-backed responses.
+            </p>
+            <ul class="chips" aria-label="AI skills">
+              <li class="chip">LLM APIs</li>
+              <li class="chip">RAG</li>
+              <li class="chip">Agentic workflows</li>
+              <li class="chip">Multi-agent systems</li>
+              <li class="chip">Structured handoffs</li>
+              <li class="chip">Prompt engineering</li>
             </ul>
           </article>
-          <article class="skills-card" data-scroll-reveal data-scroll-delay="240">
+          <article class="skills-card spotlight" data-scroll-reveal>
             <h3 class="skills-card__title">Infrastructure &amp; Security</h3>
-            <ul>
-              <li>Linux / Windows Server, Docker, Git, Grafana, REST APIs</li>
-              <li>PostgreSQL, MySQL, SQLite, InfluxDB, Supabase</li>
-              <li>NIST 800-171 implementation, penetration testing</li>
+            <p class="skills-card__summary">
+              Running production services and databases, and securing them against real frameworks.
+            </p>
+            <ul class="chips" aria-label="Infrastructure and security skills">
+              <li class="chip">Linux</li>
+              <li class="chip">Windows Server</li>
+              <li class="chip">Docker</li>
+              <li class="chip">Git</li>
+              <li class="chip">Grafana</li>
+              <li class="chip">PostgreSQL</li>
+              <li class="chip">MySQL</li>
+              <li class="chip">SQLite</li>
+              <li class="chip">InfluxDB</li>
+              <li class="chip">Supabase</li>
+              <li class="chip">NIST 800-171</li>
+              <li class="chip">Penetration testing</li>
             </ul>
           </article>
         </div>
       </section>
 
-      <section class="section" id="certifications" aria-labelledby="certifications-heading" data-scroll-reveal>
-        <div class="section__header">
+      <section class="section" id="certifications" aria-labelledby="certifications-heading">
+        <div class="section__header" data-scroll-reveal>
           <h2 id="certifications-heading">Certifications</h2>
           <p>Formal training in generative AI and hands-on cybersecurity.</p>
         </div>
         <div class="certs-grid">
-          <article class="cert-card" data-scroll-reveal>
+          <article class="cert-card spotlight" data-scroll-reveal>
             <span class="cert-card__issuer">Texas McCombs School of Business</span>
             <h3 class="cert-card__title">Post Graduate Program in Generative AI for Business Applications</h3>
           </article>
-          <article class="cert-card" data-scroll-reveal>
+          <article class="cert-card spotlight" data-scroll-reveal>
             <span class="cert-card__issuer">Palo Alto Networks</span>
             <h3 class="cert-card__title">Palo Alto Networks Cybersecurity Specialization</h3>
           </article>
-          <article class="cert-card" data-scroll-reveal>
+          <article class="cert-card spotlight" data-scroll-reveal>
             <span class="cert-card__issuer">Google</span>
             <h3 class="cert-card__title">Google Cybersecurity Specialization</h3>
           </article>
-          <article class="cert-card" data-scroll-reveal>
+          <article class="cert-card spotlight" data-scroll-reveal>
             <span class="cert-card__issuer">zSecurity</span>
             <h3 class="cert-card__title">Ethical Hacking from Scratch</h3>
           </article>
-          <article class="cert-card" data-scroll-reveal>
+          <article class="cert-card cert-card--wide spotlight" data-scroll-reveal>
             <span class="cert-card__issuer">HackTheBox</span>
             <h3 class="cert-card__title">HackTheBox (HTB)</h3>
             <p>
@@ -191,13 +261,13 @@
         </div>
       </section>
 
-      <section class="section" id="experience" aria-labelledby="experience-heading" data-scroll-reveal>
-        <div class="section__header">
+      <section class="section" id="experience" aria-labelledby="experience-heading">
+        <div class="section__header" data-scroll-reveal>
           <h2 id="experience-heading">Experience &amp; Impact</h2>
           <p>Selected roles that shaped how I build and ship software.</p>
         </div>
         <div class="timeline" id="resume">
-          <article class="timeline__item" data-scroll-reveal data-scroll-delay="80">
+          <article class="timeline__item spotlight" data-scroll-reveal>
             <div class="timeline__meta">
               <span class="timeline__date">August 2024 — Present</span>
               <span class="timeline__location">University of Texas at Austin · Bureau of Economic Geology</span>
@@ -217,7 +287,7 @@
               </ul>
             </div>
           </article>
-          <article class="timeline__item" data-scroll-reveal data-scroll-delay="160">
+          <article class="timeline__item spotlight" data-scroll-reveal>
             <div class="timeline__meta">
               <span class="timeline__date">September 2023 — May 2024</span>
               <span class="timeline__location">Ohio Wesleyan University</span>
@@ -234,7 +304,7 @@
               </ul>
             </div>
           </article>
-          <article class="timeline__item" data-scroll-reveal data-scroll-delay="200">
+          <article class="timeline__item spotlight" data-scroll-reveal>
             <div class="timeline__meta">
               <span class="timeline__date">January 2023 — May 2023</span>
               <span class="timeline__location">Ohio Wesleyan University</span>
@@ -247,7 +317,7 @@
               </p>
             </div>
           </article>
-          <article class="timeline__item" data-scroll-reveal data-scroll-delay="240">
+          <article class="timeline__item spotlight" data-scroll-reveal>
             <div class="timeline__meta">
               <span class="timeline__date">June 2022 — August 2022</span>
               <span class="timeline__location">Vidavo · Thessaloniki, Greece</span>
@@ -263,50 +333,69 @@
         </div>
       </section>
 
-      <section class="section" id="projects" aria-labelledby="projects-heading" data-scroll-reveal>
-        <div class="section__header">
+      <section class="section" id="projects" aria-labelledby="projects-heading">
+        <div class="section__header" data-scroll-reveal>
           <h2 id="projects-heading">Projects</h2>
           <p>A snapshot of what I've built, secured, and shipped.</p>
         </div>
         <div class="projects-grid">
-          <article class="project-card" data-scroll-reveal data-scroll-delay="60">
-            <div class="project-card__meta">
-              <span class="project-card__tag">Software Development</span>
+          <article class="project-card project-card--featured spotlight" data-scroll-reveal>
+            <div class="project-card__body">
+              <div class="project-card__meta">
+                <span class="project-card__tag">Software Development</span>
+                <span class="badge-live"><span class="status-dot" aria-hidden="true"></span>Live</span>
+              </div>
+              <h3>Fault Slip Potential (FSP)</h3>
+              <p>
+                Developed the web application version of the tool, initiated by the Stanford Center for Induced
+                and Triggered Seismicity — modernized scientific workflows with improved performance and usability.
+              </p>
+              <div class="project-card__actions">
+                <a href="https://tools.texnet.beg.utexas.edu/" class="button button--inline" target="_blank" rel="noopener noreferrer">Preview <span aria-hidden="true">↗</span></a>
+                <a href="https://github.com/ut-beg-texnet/FSP" class="button button--inline" target="_blank" rel="noopener noreferrer">GitHub <span aria-hidden="true">↗</span></a>
+              </div>
             </div>
-            <h3>Fault Slip Potential (FSP)</h3>
-            <p>
-              Developed the web application version of the tool, initiated by the Stanford Center for Induced
-              and Triggered Seismicity — modernized scientific workflows with improved performance and usability.
-            </p>
-            <ul>
-              <li>Stack: Julia, JavaScript, Elastic</li>
-              <li>Impact: ~50% performance improvement for web-based workflows</li>
-            </ul>
-            <div class="project-card__actions">
-              <a href="https://tools.texnet.beg.utexas.edu/" class="button button--inline" target="_blank" rel="noopener noreferrer">Preview</a>
-              <a href="https://github.com/ut-beg-texnet/FSP" class="button button--inline" target="_blank" rel="noopener noreferrer">GitHub</a>
-            </div>
-          </article>
-          <article class="project-card" data-scroll-reveal data-scroll-delay="100">
-            <div class="project-card__meta">
-              <span class="project-card__tag">Software Development</span>
-            </div>
-            <h3>Geomechanical Injection Scenario Toolkit (GIST)</h3>
-            <p>
-              Developed the web application version of the Geomechanical Injection Scenario Toolkit,
-              in collaboration with ExxonMobil and TexNet — probabilistic pore-pressure modeling to
-              support decision-making around injection-related seismicity.
-            </p>
-            <ul>
-              <li>Stack: Python, JavaScript</li>
-              <li>Impact: Five-step web workflow consolidating data entry, computation, and visualization on the TexNet Software Portal</li>
-            </ul>
-            <div class="project-card__actions">
-              <a href="https://gist.texnet.beg.utexas.edu/" class="button button--inline" target="_blank" rel="noopener noreferrer">Preview</a>
-              <a href="https://github.com/ut-beg-texnet/GIST" class="button button--inline" target="_blank" rel="noopener noreferrer">GitHub</a>
+            <div class="project-card__aside">
+              <p class="project-card__impact">
+                <span class="project-card__impact-label">Impact</span>
+                ~50% performance improvement for web-based workflows
+              </p>
+              <ul class="chips" aria-label="Tech stack">
+                <li class="chip">Julia</li>
+                <li class="chip">JavaScript</li>
+                <li class="chip">Elastic</li>
+              </ul>
             </div>
           </article>
-          <article class="project-card" data-scroll-reveal data-scroll-delay="140">
+          <article class="project-card project-card--featured spotlight" data-scroll-reveal>
+            <div class="project-card__body">
+              <div class="project-card__meta">
+                <span class="project-card__tag">Software Development</span>
+                <span class="badge-live"><span class="status-dot" aria-hidden="true"></span>Live</span>
+              </div>
+              <h3>Geomechanical Injection Scenario Toolkit (GIST)</h3>
+              <p>
+                Developed the web application version of the Geomechanical Injection Scenario Toolkit,
+                in collaboration with ExxonMobil and TexNet — probabilistic pore-pressure modeling to
+                support decision-making around injection-related seismicity.
+              </p>
+              <div class="project-card__actions">
+                <a href="https://gist.texnet.beg.utexas.edu/" class="button button--inline" target="_blank" rel="noopener noreferrer">Preview <span aria-hidden="true">↗</span></a>
+                <a href="https://github.com/ut-beg-texnet/GIST" class="button button--inline" target="_blank" rel="noopener noreferrer">GitHub <span aria-hidden="true">↗</span></a>
+              </div>
+            </div>
+            <div class="project-card__aside">
+              <p class="project-card__impact">
+                <span class="project-card__impact-label">Impact</span>
+                Five-step web workflow consolidating data entry, computation, and visualization on the TexNet Software Portal
+              </p>
+              <ul class="chips" aria-label="Tech stack">
+                <li class="chip">Python</li>
+                <li class="chip">JavaScript</li>
+              </ul>
+            </div>
+          </article>
+          <article class="project-card spotlight" data-scroll-reveal>
             <div class="project-card__meta">
               <span class="project-card__tag">AI · Legal Tech</span>
             </div>
@@ -315,12 +404,19 @@
               Built an AI assistant for Greek legal professionals combining LLM reasoning (Gemini/Deepseek)
               with authoritative legal-source retrieval and citation-backed answers.
             </p>
-            <ul>
-              <li>Stack: Python, FastAPI, LLM APIs, RAG, React/Next.js</li>
-              <li>Impact: Research workflows with citation verification, model fallback, and reduced hallucinations via grounded retrieval</li>
+            <p class="project-card__impact">
+              <span class="project-card__impact-label">Impact</span>
+              Research workflows with citation verification, model fallback, and reduced hallucinations via grounded retrieval
+            </p>
+            <ul class="chips" aria-label="Tech stack">
+              <li class="chip">Python</li>
+              <li class="chip">FastAPI</li>
+              <li class="chip">LLM APIs</li>
+              <li class="chip">RAG</li>
+              <li class="chip">React/Next.js</li>
             </ul>
           </article>
-          <article class="project-card" data-scroll-reveal data-scroll-delay="220">
+          <article class="project-card spotlight" data-scroll-reveal>
             <div class="project-card__meta">
               <span class="project-card__tag">AI · Mobile Friendly</span>
             </div>
@@ -330,36 +426,41 @@
               Designed a multi-agent AI system coordinating specialized agents for job matching, labor-market
               analysis, compensation forecasting, and career planning.
             </p>
-            <ul>
-              <li>Stack: React Native, Supabase, LLM APIs, Agentic Workflows</li>
-              <li>Impact: Structured agent handoffs, shared context, user-state persistence, and model-driven recommendations</li>
+            <p class="project-card__impact">
+              <span class="project-card__impact-label">Impact</span>
+              Structured agent handoffs, shared context, user-state persistence, and model-driven recommendations
+            </p>
+            <ul class="chips" aria-label="Tech stack">
+              <li class="chip">React Native</li>
+              <li class="chip">Supabase</li>
+              <li class="chip">LLM APIs</li>
+              <li class="chip">Agentic workflows</li>
             </ul>
             <div class="project-card__actions">
-              <a href="https://github.com/nnbakirtzis/LuminaAI" class="button button--inline" target="_blank" rel="noopener noreferrer">GitHub</a>
+              <a href="https://github.com/nnbakirtzis/LuminaAI" class="button button--inline" target="_blank" rel="noopener noreferrer">GitHub <span aria-hidden="true">↗</span></a>
             </div>
           </article>
         </div>
       </section>
 
-      <section class="section section--accent" id="contact" aria-labelledby="contact-heading" data-scroll-reveal>
-        <div class="section__header">
+      <section class="section section--accent" id="contact" aria-labelledby="contact-heading">
+        <div class="section__header" data-scroll-reveal>
           <h2 id="contact-heading">Connect</h2>
           <p>Let's collaborate on production software and AI systems.</p>
         </div>
         <div class="contact">
-          <div class="contact__card" data-scroll-reveal data-scroll-delay="60">
+          <div class="contact__card spotlight" data-scroll-reveal>
             <h3>Say hello</h3>
             <p>
               Available for full-time software engineering and AI-focused roles, collaborations, and networking.
             </p>
             <div class="contact__actions">
               <a class="button button--primary" href="mailto:nnbakirtzis@gmail.com">Email me</a>
-              <a class="button button--ghost" href="tel:+12163991294">Call</a>
               <a class="button button--ghost" href="https://www.linkedin.com/in/nikolaos-bakirtzis/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
               <a class="button button--ghost" href="https://github.com/nnbakirtzis" target="_blank" rel="noopener noreferrer">GitHub</a>
             </div>
           </div>
-          <aside class="contact__info" data-scroll-reveal data-scroll-delay="160">
+          <aside class="contact__info spotlight" data-scroll-reveal>
             <p class="contact__eyebrow">Resume</p>
             <h3>Download the full story</h3>
             <p>
@@ -379,6 +480,6 @@
     <script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
     <script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/three@0.158.0/build/three.min.js"></script>
-    <script defer src="script.js"></script>
+    <script defer src="script.js?v=20261017"></script>
   </body>
 </html>
